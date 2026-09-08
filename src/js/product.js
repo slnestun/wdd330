@@ -8,7 +8,7 @@ function addProductToCart(product) {
   if (!Array.isArray(cart)) {
     cart = [];
   }
-  const existingProduct = cart.find((item) => item.id === product.id);
+  const existingProduct = cart.find((item) => item.Id === product.Id);
 
   if (existingProduct) {
     existingProduct.quantity += 1;
