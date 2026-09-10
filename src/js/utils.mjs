@@ -24,6 +24,12 @@ export function setLocalStorage(key, data) {
 
   localStorage.setItem(key, JSON.stringify(items));
 }
+
+// retrieve a named parameter from the current URL
+export function getParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
