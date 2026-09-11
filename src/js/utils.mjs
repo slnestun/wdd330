@@ -11,24 +11,15 @@ export function getLocalStorage(key) {
 }
 // save data to local storage
 export function setLocalStorage(key, data) {
-  let items;
-  try{items = JSON.parse(localStorage.getItem(key) || []);}
-  catch(error){items = [];}
-   
-  if(Array.isArray(items)){
-    items.push(data);
-  }
-  else{
-    items = [data];
-  }
-
-  localStorage.setItem(key, JSON.stringify(items));
+  localStorage.setItem(key, JSON.stringify(data));
 }
 
 // retrieve a named parameter from the current URL
 export function getParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get(param);
+  return product
 }
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
@@ -37,4 +28,13 @@ export function setClick(selector, callback) {
     callback();
   });
   qs(selector).addEventListener("click", callback);
+}
+
+export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
+  const htmlStrings = list.map(template);
+  // if clear is true we need to clear out the contents of the parent.
+  if (clear) {
+    parentElement.innerHTML = "";
+  }
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
