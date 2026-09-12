@@ -38,18 +38,34 @@ export default class ProductDetails {
   }
 }
 
+const productOriginalPriceDetails = (FinalPrice, SuggestedRetailPrice) => {
+  if(FinalPrice >= SuggestedRetailPrice) return "";
+  const savings = SuggestedRetailPrice.toFixed(2);
+  return `<p class="product-card__original_price"> <s>$${savings}</s></p>`;
+}
+
+const productDiscountSaveDetails = (FinalPrice, SuggestedRetailPrice) => {
+  if(FinalPrice >= SuggestedRetailPrice) return "";
+  const savings = Math.round(FinalPrice < SuggestedRetailPrice).toFixed(2);
+  return `<div class="product-card_save_price">Save $${savings}</div>`;
+}
+
 function productDetailsTemplate(product) {
-  return `<h3>${product.Brand.Name}</h3>
+  return `<h3>${product.Brand.Name} </h3>
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img
       class="divider"
       src="${product.Image}"
       alt="${product.NameWithoutBrand}"
     />
+      ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
     <p class="product-card__price">$${product.FinalPrice}</p>
     <p class="product__color">${product.Colors[0].ColorName}</p>
     <p class="product__description">${product.DescriptionHtmlSimple}</p>
     <div class="product-detail__add">
       <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
-    </div>`;
+      ${productDiscountSaveDetails(product.FinalPrice, product.SuggestedRetailPrice)}
+    </div>
+    
+    `;
 }
