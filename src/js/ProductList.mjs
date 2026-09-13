@@ -1,12 +1,15 @@
 import { renderListWithTemplate } from "./utils.mjs";
+import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
 function productCardTemplate(product) {
+  console.log(product)
   return `
     <li class="product-card">
-      <a href="product_pages/?products=${product.Id}">
+      <a href="product_pages/?product=${product.Id}"> 
         <img src="${product.Image}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
-        <h3>${product.Name} test2</h3>
+        <h3>${product.Name}</h3>
+        ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
     </li>

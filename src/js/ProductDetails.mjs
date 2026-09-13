@@ -1,4 +1,5 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { productOriginalPriceDetails, productDiscountSaveDetails } from "./ProductCalculateDiscount.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -36,18 +37,6 @@ export default class ProductDetails {
     document.querySelector(".product-detail").innerHTML =
       productDetailsTemplate(this.product);
   }
-}
-
-const productOriginalPriceDetails = (FinalPrice, SuggestedRetailPrice) => {
-  if(FinalPrice >= SuggestedRetailPrice) return "";
-  const savings = SuggestedRetailPrice.toFixed(2);
-  return `<p class="product-card__original_price"> <s>$${savings}</s></p>`;
-}
-
-const productDiscountSaveDetails = (FinalPrice, SuggestedRetailPrice) => {
-  if(FinalPrice >= SuggestedRetailPrice) return "";
-  const savings = Math.round(FinalPrice < SuggestedRetailPrice).toFixed(2);
-  return `<div class="product-card_save_price">Save $${savings}</div>`;
 }
 
 function productDetailsTemplate(product) {
