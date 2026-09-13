@@ -38,3 +38,27 @@ export function renderListWithTemplate(template, parentElement, list, position =
   }
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
+
+export function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
+  const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+
+  let cartCount = document.querySelector(".cart-count");
+
+  // If the badge doesn't exist, try to create and append it to the .cart container
+  if (!cartCount) {
+    const cartEl = document.querySelector(".cart");
+    if (cartEl) {
+      const span = document.createElement("span");
+      span.className = "cart-count";
+      span.style.display = "none";
+      cartEl.appendChild(span);
+      cartCount = span;
+    }
+  }
+
+  if (!cartCount) return;
+
+  cartCount.textContent = count;
+  cartCount.style.display = count > 0 ? "flex" : "none";
+}
