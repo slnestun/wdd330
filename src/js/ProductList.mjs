@@ -6,7 +6,7 @@ function productCardTemplate(product) {
   return `
     <li class="product-card">
       <a href="product_pages/?product=${product.Id}"> 
-        <img src="${product.Image}" alt="${product.Name}">
+        <img src="${product.Image}" alt="${product.Name}" onerror="this.onerror=null; this.src='/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg'">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.Name}</h3>
         ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
