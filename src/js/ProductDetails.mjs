@@ -46,6 +46,7 @@ function productDetailsTemplate(product) {
     <img
       class="divider"
       src="${product.Image}"
+      onerror="this.onerror=null; this.src='/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg'"
       alt="${product.NameWithoutBrand}"
     />
       ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}

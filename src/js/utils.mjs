@@ -7,7 +7,18 @@ export function qs(selector, parent = document) {
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+  const storedValue = localStorage.getItem(key);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue);
+  } catch {
+    localStorage.removeItem(key);
+    return null;
+  }
 }
 // save data to local storage
 export function setLocalStorage(key, data) {
@@ -40,25 +51,19 @@ export function renderListWithTemplate(template, parentElement, list, position =
 }
 
 export function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
-  const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+  const storedCart = getLocalStorage("so-cart");
+  const cart = Array.isArray(storedCart) ? storedCart : [];
+  const count = cart.length;
 
-  let cartCount = document.querySelector(".cart-count");
-
-  // If the badge doesn't exist, try to create and append it to the .cart container
-  if (!cartCount) {
-    const cartEl = document.querySelector(".cart");
-    if (cartEl) {
-      const span = document.createElement("span");
-      span.className = "cart-count";
-      span.style.display = "none";
-      cartEl.appendChild(span);
-      cartCount = span;
+  document.querySelectorAll(".cart").forEach((cartElement) => {
+    let cartCount = cartElement.querySelector(".cart-count");
+    if (!cartCount) {
+      cartCount = document.createElement("sup");
+      cartCount.className = "cart-count";
+      cartElement.appendChild(cartCount);
     }
-  }
 
-  if (!cartCount) return;
-
-  cartCount.textContent = count;
-  cartCount.style.display = count > 0 ? "flex" : "none";
+    cartCount.textContent = count;
+    cartCount.style.display = count > 0 ? "flex" : "none";
+  });
 }
