@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square>div {
+.logo--square > div {
   margin-top: -1.7em;
 }
 
@@ -136,8 +136,8 @@ button {
   background-color: var(--primary-color);
   font-weight: bold;
   position: absolute;
-  right: -.5rem;
-  top: -.09rem;
+  right: -0.5rem;
+  top: -0.09rem;
   border-radius: 50%;
   width: 1.5rem;
   height: 1.5rem;
@@ -205,7 +205,6 @@ button {
   border: 1px solid var(--light-grey);
   max-width: 250px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-
 }
 
 /* I used AI to select the colors, for the syntax and for advices of how to improve it */
@@ -281,7 +280,7 @@ button {
 .cart-card {
   display: grid;
   grid-template-columns: 25% auto 15%;
-  gap: .5rem;
+  gap: 0.5rem;
   font-size: var(--small-font);
   text-align: left;
   /* max-height: 120px; */
