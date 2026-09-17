@@ -1,8 +1,16 @@
-Trello Board:
+Render:
+https://wdd330-qfv5.onrender.com/
 
+GitHub:
+https://github.com/slnestun/wdd330/tree/main
+
+Trello Board:
 https://trello.com/b/ZqvZF7tX/sleep-outside-team-7
+
 
 Team Members:
 
 Nestor Rivera
 Moises Pleytez
+Daniel Kalu
+Etim Frank
