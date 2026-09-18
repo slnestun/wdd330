@@ -2,13 +2,14 @@ import { renderListWithTemplate } from "./utils.mjs";
 import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
 function productCardTemplate(product) {
-  console.log(product) 
+  // eslint-disable-next-line no-console
+  console.log(product);
   return `
     <li class="product-card">
-      <a href="product_pages/?product=${product.Id}"> 
-        <img src="${product.Image}" alt="${product.Name}">
+      <a href="/product_pages/?product=${product.Id}"> 
+        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
-        <h3>${product.Name}</h3>
+        <h3>${product.NameWithoutBrand}</h3>
         ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
@@ -24,7 +25,7 @@ export default class ProductList {
   }
 
   async init() {
-    const list = await this.dataSource.getData();
+    const list = await this.dataSource.getData(this.category);
     this.renderList(list);
   }
 
@@ -34,7 +35,5 @@ export default class ProductList {
 
     // apply use new utility function instead of the commented code above
     renderListWithTemplate(productCardTemplate, this.listElement, list);
-
   }
-
 }

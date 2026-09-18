@@ -1,5 +1,8 @@
 import { getLocalStorage, setLocalStorage, updateCartCount } from "./utils.mjs";
-import { productOriginalPriceDetails, productDiscountSaveDetails } from "./ProductCalculateDiscount.mjs";
+import {
+  productOriginalPriceDetails,
+  productDiscountSaveDetails,
+} from "./ProductCalculateDiscount.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -45,7 +48,7 @@ function productDetailsTemplate(product) {
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img
       class="divider"
-      src="${product.Image}"
+      src="${product.Images.PrimaryLarge}"
       alt="${product.NameWithoutBrand}"
     />
       ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
