@@ -2,7 +2,7 @@ import { renderListWithTemplate } from "./utils.mjs";
 import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
 function productCardTemplate(product) {
-  console.log(product)
+  console.log(product) 
   return `
     <li class="product-card">
       <a href="product_pages/?product=${product.Id}"> 
