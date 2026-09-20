@@ -1,6 +1,7 @@
 import {
   getLocalStorage,
   loadHeaderFooter,
+  setLocalStorage,
   updateCartCount,
 } from "./utils.mjs";
 
@@ -24,13 +25,33 @@ function renderCartContents() {
 
     cartTotal.textContent = `Total: $${total.toFixed(2)}`;
     cartFooter.classList.remove("hide");
+  } else if (cartFooter) {
+    cartFooter.classList.add("hide");
   }
+}
+
+function removeCartItem(productId) {
+  const storedCart = getLocalStorage("so-cart");
+  const cartItems = Array.isArray(storedCart) ? storedCart : [];
+  const updatedCart = cartItems.filter(
+    (item) => String(item.Id) !== String(productId),
+  );
+
+  setLocalStorage("so-cart", updatedCart);
+  renderCartContents();
+  updateCartCount();
 }
 
 function cartItemTemplate(item) {
   const subtotal = Number(item.FinalPrice) * (item.quantity || 1);
 
   return `<li class="cart-card divider">
+    <button
+      type="button"
+      class="cart-card__remove"
+      data-id="${item.Id}"
+      aria-label="Remove ${item.Name} from cart"
+    >&times;</button>
     <a href="../product_pages/?product=${item.Id}" class="cart-card__image">
       <img
         src="${item.Images?.PrimarySmall || item.Images?.PrimaryMedium || item.Image}"
@@ -51,3 +72,11 @@ function cartItemTemplate(item) {
 
 renderCartContents();
 loadHeaderFooter(updateCartCount);
+
+document.querySelector(".product-list")?.addEventListener("click", (event) => {
+  const removeButton = event.target.closest(".cart-card__remove");
+
+  if (removeButton) {
+    removeCartItem(removeButton.dataset.id);
+  }
+});
