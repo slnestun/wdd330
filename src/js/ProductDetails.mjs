@@ -1,5 +1,8 @@
 import { getLocalStorage, setLocalStorage, updateCartCount } from "./utils.mjs";
-import { productOriginalPriceDetails, productDiscountSaveDetails } from "./ProductCalculateDiscount.mjs";
+import {
+  productOriginalPriceDetails,
+  productDiscountSaveDetails,
+} from "./ProductCalculateDiscount.mjs";
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -45,8 +48,7 @@ function productDetailsTemplate(product) {
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img
       class="divider"
-      src="${product.Image}"
-      onerror="this.onerror=null; this.src='/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg'"
+      src="${product.Images.PrimaryLarge}"
       alt="${product.NameWithoutBrand}"
     />
       ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
