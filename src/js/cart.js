@@ -33,7 +33,7 @@ function cartItemTemplate(item) {
   return `<li class="cart-card divider">
     <a href="../product_pages/?product=${item.Id}" class="cart-card__image">
       <img
-        src="${item.Image}"
+        src="${item.Images?.PrimarySmall || item.Images?.PrimaryMedium || item.Image}"
         alt="${item.Name}"
         onerror="this.onerror=null; this.src='/images/tents/marmot-ajax-tent-3-person-3-season-in-pale-pumpkin-terracotta~p~880rr_01~320.jpg'"
       />
