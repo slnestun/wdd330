@@ -20,10 +20,11 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.products = [];
   }
 
   async init() {
-    const list = await this.dataSource.getData(this.category);
+    this.products = await this.dataSource.getData(this.category);
     const title = document.querySelector(".products h2");
     const categoryName = this.category
       .split("-")
@@ -33,10 +34,22 @@ export default class ProductList {
     if (title) {
       title.textContent = `Top Products: ${categoryName}`;
     }
-    this.renderList(list);
+    this.renderList(this.products);
   }
 
   renderList(list) {
-    renderListWithTemplate(productCardTemplate, this.listElement, list);
+    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
+  }
+
+  sortBy(sortOrder) {
+    const sortedProducts = [...this.products].sort((firstProduct, secondProduct) => {
+      if (sortOrder === "name") {
+        return firstProduct.Name.localeCompare(secondProduct.Name);
+      }
+
+      return Number(firstProduct.FinalPrice) - Number(secondProduct.FinalPrice);
+    });
+
+    this.renderList(sortedProducts);
   }
 }
