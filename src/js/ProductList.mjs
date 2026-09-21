@@ -23,20 +23,27 @@ export default class ProductList {
   }
 
   async init() {
-    const list = await this.dataSource.getData(this.category);
     const param = getParam("search");
 
-    const title = document.querySelector(".products h2");
-    if (this.category && title) {
-      const categoryName = this.category
-        .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
-      title.textContent = `Top Products: ${categoryName}`;
-    } else if (param && title) {
-      title.textContent = `Search results for: "${param}"`;
+    let list;
+    if (param) {
+      list = await this.dataSource.getData();
+    } else {
+      list = await this.dataSource.getData(this.category);
     }
 
+    const title = document.querySelector(".products h2");
+    if (param && title) {
+      title.textContent = `Search results for: "${param}"`;
+    } else {
+      if (this.category) {
+        const categoryName = this.category
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+        title.textContent = `Top Products: ${categoryName}`;
+      }
+    }
     let listToRender = list || [];
 
     if (param) {
