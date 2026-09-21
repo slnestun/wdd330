@@ -1,19 +1,26 @@
-//There are plenty of functions to add in loadModules, but because this is just a student project
-//I only implemented just 
-//what I needed
-import { showSearchBar } from "../js/searchBar.mjs";
+import { showSearchBar } from "./searchBar.mjs";
 
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+  const storedValue = localStorage.getItem(key);
+
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(storedValue);
+  } catch {
+    localStorage.removeItem(key);
+    return null;
+  }
 }
+
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
@@ -23,9 +30,9 @@ export function setLocalStorage(key, data) {
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get(param);
-  return product;
+  return urlParams.get(param);
 }
+
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
@@ -43,40 +50,14 @@ export function renderListWithTemplate(
   clear = false,
 ) {
   const htmlStrings = list.map(template);
-  // if clear is true we need to clear out the contents of the parent.
   if (clear) {
     parentElement.innerHTML = "";
   }
   parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
 }
 
-export function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem("so-cart")) || [];
-  const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-
-  let cartCount = document.querySelector(".cart-count");
-
-  // If the badge doesn't exist, try to create and append it to the .cart container
-  if (!cartCount) {
-    const cartEl = document.querySelector(".cart");
-    if (cartEl) {
-      const span = document.createElement("span");
-      span.className = "cart-count";
-      span.style.display = "none";
-      cartEl.appendChild(span);
-      cartCount = span;
-    }
-  }
-
-  if (!cartCount) return;
-
-  cartCount.textContent = count;
-  cartCount.style.display = count > 0 ? "flex" : "none";
-}
-
 export function renderWithTemplate(template, parentElement, data, callback) {
   parentElement.innerHTML = template;
-
   if (callback) {
     callback(data);
   }
@@ -89,20 +70,36 @@ export async function loadTemplate(path) {
 }
 
 export async function loadModules() {
-  //There are plenty of functions to add in loadModules, but because this is just a student project
-  //I only implemented just what I needed
   showSearchBar();
 }
 
-export async function loadHeaderFooter() {
-  const headerTemplate = await loadTemplate("../partials/header.html");
-  const footerTemplate = await loadTemplate("../partials/footer.html");
+export async function loadHeaderFooter(callback) {
+  const headerTemplate = await loadTemplate("/partials/header.html");
+  const footerTemplate = await loadTemplate("/partials/footer.html");
 
   const headerElement = document.querySelector("#main-header");
   const footerElement = document.querySelector("#main-footer");
 
-  renderWithTemplate(headerTemplate, headerElement);
+  renderWithTemplate(headerTemplate, headerElement, null, callback);
   renderWithTemplate(footerTemplate, footerElement);
 
   loadModules();
+}
+
+export function updateCartCount() {
+  const storedCart = getLocalStorage("so-cart");
+  const cart = Array.isArray(storedCart) ? storedCart : [];
+  const count = cart.length;
+
+  document.querySelectorAll(".cart").forEach((cartElement) => {
+    let cartCount = cartElement.querySelector(".cart-count");
+    if (!cartCount) {
+      cartCount = document.createElement("sup");
+      cartCount.className = "cart-count";
+      cartElement.appendChild(cartCount);
+    }
+
+    cartCount.textContent = count;
+    cartCount.style.display = count > 0 ? "flex" : "none";
+  });
 }

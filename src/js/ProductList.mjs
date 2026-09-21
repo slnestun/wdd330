@@ -2,11 +2,9 @@ import { renderListWithTemplate, getParam } from "./utils.mjs";
 import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
 function productCardTemplate(product) {
-  // eslint-disable-next-line no-console
-  console.log(product);
   return `
     <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}"> 
+      <a href="/product_pages/?product=${product.Id}">
         <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.NameWithoutBrand}</h3>
@@ -24,30 +22,40 @@ export default class ProductList {
     this.listElement = listElement;
   }
 
-  // I used AI to modify this part.
   async init() {
-    const param = getParam("search");
     const list = await this.dataSource.getData(this.category);
-    let listToRender = list;
+    const param = getParam("search");
+
+    const title = document.querySelector(".products h2");
+    if (this.category && title) {
+      const categoryName = this.category
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+      title.textContent = `Top Products: ${categoryName}`;
+    } else if (param && title) {
+      title.textContent = `Search results for: "${param}"`;
+    }
+
+    let listToRender = list || [];
 
     if (param) {
-      listToRender = list.filter((product) =>
+      listToRender = listToRender.filter((product) =>
         product.Name.toLowerCase().includes(param.toLowerCase()),
       );
     }
+
+    this.listElement.innerHTML = "";
+
     if (listToRender.length === 0) {
-      this.listElement.innerHTML = "";
-      this.listElement.innerHTML = `${param} doesn't exist, Please check if it is spelled correctly`;
+      const searchTerm = param || "Item";
+      this.listElement.innerHTML = `<li class="no-products-found"><p>${searchTerm} doesn't exist, Please check if it is spelled correctly</p></li>`;
     } else {
       this.renderList(listToRender);
     }
   }
 
   renderList(list) {
-    // const htmlStrings = list.map(productCardTemplate);
-    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
-
-    // apply use new utility function instead of the commented code above
     renderListWithTemplate(
       productCardTemplate,
       this.listElement,

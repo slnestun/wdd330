@@ -133,21 +133,17 @@ button {
 
 /* small badge showing item count on the cart icon */
 .cart-count {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  background-color: var(--tertiary-color);
-  color: white;
-  min-width: 20px;
-  height: 20px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  padding: 0 6px;
-  line-height: 20px;
+  background-color: var(--primary-color);
   font-weight: bold;
+  position: absolute;
+  right: -0.5rem;
+  top: -0.09rem;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* End cart icon styles */
@@ -219,8 +215,47 @@ button {
   padding: 1rem;
 }
 
-.products h2 {
-  margin-bottom: 1em;
+.product-categories {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.category-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.category-card {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 0.5rem;
+  color: var(--dark-grey);
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.category-card:hover,
+.category-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.category-card img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
 }
 
 .product-list {
@@ -235,6 +270,20 @@ button {
   color: var(--dark-grey);
 }
 
+.hide {
+  display: none;
+}
+
+.cart-footer {
+  padding: 1rem;
+  text-align: right;
+}
+
+.cart-total {
+  font-weight: bold;
+  text-align: center;
+}
+
 /* Styles for product lists */
 .product-card {
   flex: 1 1 45%;
@@ -242,6 +291,7 @@ button {
   padding: 0.5em;
   border: 1px solid var(--light-grey);
   max-width: 250px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 /* I used AI to select the colors, for the syntax and for advices of how to improve it */
@@ -249,27 +299,32 @@ button {
   position: relative;
 }
 
-.product-card_save_price {
-  position: absolute;
-  top: -10px;
-  left: 70px;
+.product-card_save_price{
+position: absolute;
+top: -10px;
+left: 70px;
 
-  border-radius: 8px;
-  font-weight: bold;
-  z-index: 10;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  line-height: 1;
+border-radius: 8px;
+font-weight: bold;
+z-index: 10;
+box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+line-height: 1;
 
-  color: #ffffff;
-  font-size: 10px;
-  background-color: #c8641b;
-  padding: 10px;
+color: #ffffff;
+font-size: 10px;
+background-color: #c8641b;
+padding: 10px;
 }
 
 .product-card h2,
 .product-card h3,
 .product-card p {
   margin: 0.5em 0;
+}
+
+.product-card h3 {
+  font-size: 1rem;
+  text-decoration: underline;
 }
 
 .card__brand {
@@ -296,13 +351,38 @@ button {
 .cart-card {
   display: grid;
   grid-template-columns: 25% auto 15%;
+  gap: 0.5rem;
   font-size: var(--small-font);
+  text-align: left;
+  position: relative;
+  padding-right: 2.5rem;
   /* max-height: 120px; */
   align-items: center;
 }
 
+.cart-card__remove {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--dark-grey);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.cart-card__remove:hover,
+.cart-card__remove:focus-visible {
+  background-color: var(--tertiary-color);
+  color: white;
+}
+
 .cart-card__image {
-  grid-row: 1/3;
+  grid-row: 1/4;
   grid-column: 1;
 }
 
@@ -330,6 +410,18 @@ button {
   grid-column: 3;
 }
 
+.cart-card__subtotal {
+  grid-row: 3;
+  grid-column: 2;
+}
+
+.subtotal_price {
+  grid-row: 3;
+  grid-column: 3;
+  font-weight: bold;
+  text-align: right;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
@@ -343,6 +435,10 @@ button {
   .cart-card {
     font-size: inherit;
     grid-template-columns: 150px auto 15%;
+  }
+
+  .category-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
