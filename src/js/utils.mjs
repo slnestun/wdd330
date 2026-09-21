@@ -1,3 +1,8 @@
+//There are plenty of functions to add in loadModules, but because this is just a student project
+//I only implemented just 
+//what I needed
+import { showSearchBar } from "../js/searchBar.mjs";
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
@@ -83,6 +88,12 @@ export async function loadTemplate(path) {
   return template;
 }
 
+export async function loadModules() {
+  //There are plenty of functions to add in loadModules, but because this is just a student project
+  //I only implemented just what I needed
+  showSearchBar();
+}
+
 export async function loadHeaderFooter() {
   const headerTemplate = await loadTemplate("../partials/header.html");
   const footerTemplate = await loadTemplate("../partials/footer.html");
@@ -92,4 +103,6 @@ export async function loadHeaderFooter() {
 
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
+
+  loadModules();
 }

@@ -3,40 +3,53 @@
 function templateSearchBar() {
   const searchDiv = document.createElement("div");
   const searchContainer = document.createElement("div");
+  const icon = document.createElement("button");
   const search = document.createElement("input");
-  const itemsList = document.createElement("ul");
+
   const item = document.createElement("li");
-
   searchContainer.className = "search-container";
+  icon.id = "search-button";
+  icon.textContent = "🔍";
   search.type = "search";
-  search.id = "searchMain";
+  search.id = "search-main";
   search.placeholder = "Search...";
-  itemsList.id = "itemsList";
-  item.className = "item";
 
+  item.className = "item";
+  searchContainer.appendChild(icon);
   searchContainer.appendChild(search);
-  itemsList.appendChild(item);
   searchDiv.appendChild(searchContainer);
-  searchDiv.appendChild(itemsList);
+
   return searchDiv;
 }
 
 function processSearchBar() {
-  const searchInput = document.getElementById("searchMain");
-  const items = document.querySelectorAll(".item");
+  const searchInput = document.getElementById("search-main");
+  const button = document.getElementById("search-button");
 
-  searchInput.addEventListener("input", (e) => {
+  let executeSearch = () => {
+    let query = searchInput.value.toLowerCase().trim();
+    if (query) {
+      window.location.href = `/product_listing/index.html?search=${encodeURIComponent(query)}`;
+    }
+  };
+
+  button.addEventListener("click", () => {
+    executeSearch();
+  });
+
+  searchInput.addEventListener("keydown", (e) => {
     const query = e.target.value.toLowerCase().trim();
 
-    items.forEach((item) => {
-      const text = item.textContent.toLowerCase();
-      const isVisible = text.includes(query);
-      item.style.display = isVisible ? "block" : "none";
-    });
+    if (e.key == "Enter") {
+      if (query) {
+        e.preventDefault();
+        executeSearch();
+      }
+    }
   });
 }
 
-function showSearchBar() {
+export function showSearchBar() {
   const header = document.querySelector("header");
   const searchElement = templateSearchBar();
 
@@ -44,5 +57,3 @@ function showSearchBar() {
 
   processSearchBar();
 }
-
-showSearchBar();

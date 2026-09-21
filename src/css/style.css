@@ -152,6 +152,32 @@ button {
 
 /* End cart icon styles */
 
+/* Start search section */
+/* I used AI to modify this for the syntax */
+.search-container {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 10px;
+}
+#search-button {
+  background-color: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+#search-main {
+  padding: 3px 13px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#search-main:focus {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* End search section */
+
 .mission {
   position: absolute;
   top: 1rem;
