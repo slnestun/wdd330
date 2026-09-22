@@ -1,9 +1,9 @@
+import { showSearchBar } from "./searchBar.mjs";
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
@@ -20,6 +20,7 @@ export function getLocalStorage(key) {
     return null;
   }
 }
+
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
@@ -29,9 +30,9 @@ export function setLocalStorage(key, data) {
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get(param);
-  return product;
+  return urlParams.get(param);
 }
+
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
@@ -49,7 +50,6 @@ export function renderListWithTemplate(
   clear = false,
 ) {
   const htmlStrings = list.map(template);
-  // if clear is true we need to clear out the contents of the parent.
   if (clear) {
     parentElement.innerHTML = "";
   }
@@ -69,6 +69,10 @@ export async function loadTemplate(path) {
   return template;
 }
 
+export async function loadModules() {
+  showSearchBar();
+}
+
 export async function loadHeaderFooter(callback) {
   const headerTemplate = await loadTemplate("/partials/header.html");
   const footerTemplate = await loadTemplate("/partials/footer.html");
@@ -78,6 +82,8 @@ export async function loadHeaderFooter(callback) {
 
   renderWithTemplate(headerTemplate, headerElement, null, callback);
   renderWithTemplate(footerTemplate, footerElement);
+
+  loadModules();
 }
 
 export function updateCartCount() {

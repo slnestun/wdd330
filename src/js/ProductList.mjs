@@ -1,4 +1,4 @@
-import { renderListWithTemplate } from "./utils.mjs";
+import { renderListWithTemplate, getParam } from "./utils.mjs";
 import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
 function productCardTemplate(product) {
@@ -7,7 +7,7 @@ function productCardTemplate(product) {
       <a href="/product_pages/?product=${product.Id}">
         <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
-        <h3>${product.Name}</h3>
+        <h3>${product.NameWithoutBrand}</h3>
         ${productOriginalPriceDetails(product.FinalPrice, product.SuggestedRetailPrice)}
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
@@ -25,14 +25,42 @@ export default class ProductList {
 
   async init() {
     this.products = await this.dataSource.getData(this.category);
-    const title = document.querySelector(".products h2");
-    const categoryName = this.category
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+    const param = getParam("search");
 
-    if (title) {
-      title.textContent = `Top Products: ${categoryName}`;
+    let list;
+    if (param) {
+      list = await this.dataSource.getData();
+    } else {
+      list = await this.dataSource.getData(this.category);
+    }
+
+    const title = document.querySelector(".products h2");
+    if (param && title) {
+      title.textContent = `Search results for: "${param}"`;
+    } else {
+      if (this.category) {
+        const categoryName = this.category
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+        title.textContent = `Top Products: ${categoryName}`;
+      }
+    }
+    let listToRender = list || [];
+
+    if (param) {
+      listToRender = listToRender.filter((product) =>
+        product.Name.toLowerCase().includes(param.toLowerCase()),
+      );
+    }
+
+    this.listElement.innerHTML = "";
+
+    if (listToRender.length === 0) {
+      const searchTerm = param || "Item";
+      this.listElement.innerHTML = `<li class="no-products-found"><p>${searchTerm} doesn't exist, Please check if it is spelled correctly</p></li>`;
+    } else {
+      this.renderList(listToRender);
     }
     this.renderList(this.products);
   }
@@ -51,5 +79,15 @@ export default class ProductList {
     });
 
     this.renderList(sortedProducts);
+  }
+
+  renderList(list) {
+    renderListWithTemplate(
+      productCardTemplate,
+      this.listElement,
+      list,
+      "afterbegin",
+      true,
+    );
   }
 }

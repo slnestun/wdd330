@@ -9,10 +9,23 @@ async function convertToJson(res) {
 }
 
 export default class ProductData {
+  constructor() {}
+
   async getData(category) {
-    const response = await fetch(`${baseURL}products/search/${category}`);
-    const data = await convertToJson(response);
-    return data.Result;
+    if (!category) {
+      let results;
+      results = await Promise.all(
+        ["tents", "backpacks", "sleeping-bags", "hammocks"].map((cat) =>
+          this.getData(cat),
+        ),
+      );
+      return results.flat();
+    } else {
+      let categoryName = category.toLowerCase();
+      const response = await fetch(`${baseURL}products/search/${categoryName}`);
+      const data = await convertToJson(response);
+      return data.Result || [];
+    }
   }
 
   async findProductById(id) {
