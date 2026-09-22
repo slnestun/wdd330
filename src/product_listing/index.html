@@ -1,12 +1,33 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sleep Outside | Products</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <script type="module" src="../js/product-listing.js"></script>
-  </head>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleep Outside | Products</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="module" src="../js/product-listing.js"></script>
+</head>
+
+<body>
+  <header class="divider" id="main-header"></header>
+  <main class="divider">
+    <section class="products">
+      <div class="products-header">
+        <h2>Top Products</h2>
+        <label for="sort-products">
+          Sort by
+          <select id="sort-products">
+            <option value="name">Product Name</option>
+            <option value="price">Product Price</option>
+          </select>
+        </label>
+      </div>
+      <ul class="product-list"></ul>
+    </section>
+  </main>
+  <footer id="main-footer"></footer>
+</body>
 
   <body>
     <header class="divider" id="main-header"></header>

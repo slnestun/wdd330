@@ -20,9 +20,11 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.products = [];
   }
 
   async init() {
+    this.products = await this.dataSource.getData(this.category);
     const param = getParam("search");
 
     let list;
@@ -60,6 +62,23 @@ export default class ProductList {
     } else {
       this.renderList(listToRender);
     }
+    this.renderList(this.products);
+  }
+
+  renderList(list) {
+    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
+  }
+
+  sortBy(sortOrder) {
+    const sortedProducts = [...this.products].sort((firstProduct, secondProduct) => {
+      if (sortOrder === "name") {
+        return firstProduct.Name.localeCompare(secondProduct.Name);
+      }
+
+      return Number(firstProduct.FinalPrice) - Number(secondProduct.FinalPrice);
+    });
+
+    this.renderList(sortedProducts);
   }
 
   renderList(list) {
