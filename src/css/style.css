@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square>div {
+.logo--square > div {
   margin-top: -1.7em;
 }
 
@@ -302,6 +302,103 @@ button {
   text-align: center;
 }
 
+.button {
+  display: inline-block;
+  padding: 0.65rem 1.5rem;
+  border-radius: 0.25rem;
+  background-color: var(--secondary-color);
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.checkout-link {
+  margin-top: 0.5rem;
+}
+
+/* Checkout */
+.checkout-page {
+  padding: 1rem;
+}
+
+.checkout-page > h1 {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.checkout-layout {
+  display: grid;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.checkout-form fieldset {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+}
+
+.checkout-form legend {
+  padding: 0 0.5rem;
+  font-weight: bold;
+}
+
+.checkout-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: bold;
+}
+
+.checkout-form input {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid #777;
+  border-radius: 0.25rem;
+  font: inherit;
+}
+
+.checkout-form input:focus {
+  outline: 3px solid rgba(240, 168, 104, 0.45);
+  border-color: var(--tertiary-color);
+}
+
+.checkout-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.checkout-message {
+  min-height: 2.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.order-summary {
+  padding: 1rem;
+  border: 1px solid var(--light-grey);
+  border-radius: 0.25rem;
+  background-color: #fafafa;
+}
+
+.order-summary h2 {
+  margin-bottom: 0.75rem;
+}
+
+.order-summary > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+}
+
+.order-summary__total {
+  margin-top: 0.5rem;
+  border-top: 2px solid var(--primary-color);
+  font-size: var(--large-font);
+}
+
 /* Styles for product lists */
 .product-card {
   flex: 1 1 45%;
@@ -317,21 +414,21 @@ button {
   position: relative;
 }
 
-.product-card_save_price{
-position: absolute;
-top: -10px;
-left: 70px;
+.product-card_save_price {
+  position: absolute;
+  top: -10px;
+  left: 70px;
 
-border-radius: 8px;
-font-weight: bold;
-z-index: 10;
-box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-line-height: 1;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 10;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  line-height: 1;
 
-color: #ffffff;
-font-size: 10px;
-background-color: #c8641b;
-padding: 10px;
+  color: #ffffff;
+  font-size: 10px;
+  background-color: #c8641b;
+  padding: 10px;
 }
 
 .product-card h2,
@@ -473,6 +570,18 @@ input[type="number"]::before {
 
   .category-list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .checkout-layout {
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  }
+
+  .checkout-form fieldset {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkout-form .full-width {
+    grid-column: 1 / -1;
   }
 }
 
