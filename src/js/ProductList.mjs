@@ -24,15 +24,10 @@ export default class ProductList {
   }
 
   async init() {
-    this.products = await this.dataSource.getData(this.category);
     const param = getParam("search");
-
-    let list;
-    if (param) {
-      list = await this.dataSource.getData();
-    } else {
-      list = await this.dataSource.getData(this.category);
-    }
+    const list = await this.dataSource.getData(
+      param ? undefined : this.category,
+    );
 
     const title = document.querySelector(".products h2");
     if (param && title) {
@@ -54,6 +49,7 @@ export default class ProductList {
       );
     }
 
+    this.products = listToRender;
     this.listElement.innerHTML = "";
 
     if (listToRender.length === 0) {
@@ -62,21 +58,20 @@ export default class ProductList {
     } else {
       this.renderList(listToRender);
     }
-    this.renderList(this.products);
-  }
-
-  renderList(list) {
-    renderListWithTemplate(productCardTemplate, this.listElement, list, "afterbegin", true);
   }
 
   sortBy(sortOrder) {
-    const sortedProducts = [...this.products].sort((firstProduct, secondProduct) => {
-      if (sortOrder === "name") {
-        return firstProduct.Name.localeCompare(secondProduct.Name);
-      }
+    const sortedProducts = [...this.products].sort(
+      (firstProduct, secondProduct) => {
+        if (sortOrder === "name") {
+          return firstProduct.Name.localeCompare(secondProduct.Name);
+        }
 
-      return Number(firstProduct.FinalPrice) - Number(secondProduct.FinalPrice);
-    });
+        return (
+          Number(firstProduct.FinalPrice) - Number(secondProduct.FinalPrice)
+        );
+      },
+    );
 
     this.renderList(sortedProducts);
   }
