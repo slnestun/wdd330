@@ -1,13 +1,15 @@
 const baseURL = import.meta.env.VITE_SERVER_URL;
 
-async function convertToJson(response) {
+export async function convertToJson(response) {
   const data = await response.json();
 
   if (response.ok) {
     return data;
   }
-
-  throw new Error(data.message || "The server could not complete the request.");
+  throw {
+    name: "ServicesError",
+    message: data,
+  };
 }
 
 export default class ExternalServices {
@@ -33,15 +35,13 @@ export default class ExternalServices {
     return data.Result;
   }
 
-  async checkout(order) {
-    const response = await fetch(`${baseURL}checkout`, {
+  async checkout(payload) {
+    return fetch(`${baseURL}checkout/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(order),
-    });
-
-    return convertToJson(response);
+      body: JSON.stringify(payload),
+    }).then(convertToJson);
   }
 }

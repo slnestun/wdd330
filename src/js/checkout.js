@@ -4,39 +4,40 @@ import ExternalServices from "./ExternalServices.mjs";
 
 loadHeaderFooter(updateCartCount);
 
-const form = document.querySelector("#checkout-form");
-const zip = document.querySelector("#zip");
-const message = document.querySelector("#checkout-message");
-const checkoutProcess = new CheckoutProcess(
+const checkout = new CheckoutProcess(
   "so-cart",
   "#order-summary",
   new ExternalServices(),
 );
 
-checkoutProcess.init();
+const form = document.querySelector("#checkout-form");
+document
+  .querySelector("#zip")
+  .addEventListener("blur", checkout.calculateOrdertotal.bind(checkout));
+const message = document.querySelector("#checkout-message");
 
-if (checkoutProcess.itemCount === 0) {
+checkout.init();
+checkout.calculateOrdertotal();
+
+if (checkout.itemCount === 0) {
   message.textContent = "Your cart is empty. Add an item before checking out.";
   form.querySelector("button[type='submit']").disabled = true;
 }
 
-zip?.addEventListener("change", () => checkoutProcess.calculateOrderTotal());
-
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
+  form.reportValidity();
 
   const submitButton = form.querySelector("button[type='submit']");
   submitButton.disabled = true;
   message.textContent = "Submitting your order...";
 
   try {
-    await checkoutProcess.checkout(form);
-    message.textContent = "Order submitted successfully.";
+    if (form.checkValidity()) {
+      await checkout.checkout();
+      message.textContent = "Order submitted successfully.";
+    }
   } catch (error) {
     message.textContent = error.message;
     submitButton.disabled = false;

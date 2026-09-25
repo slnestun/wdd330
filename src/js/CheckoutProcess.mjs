@@ -1,4 +1,12 @@
-import { getLocalStorage } from "./utils.mjs";
+import {
+  alertMessage,
+  getLocalStorage,
+  removeAllAlerts,
+  setLocalStorage,
+} from "./utils.mjs";
+import ExternalServices from "./ExternalServices.mjs";
+
+const services = new ExternalServices();
 
 function formDataToJSON(formElement) {
   const formData = new FormData(formElement);
@@ -15,10 +23,9 @@ export function packageItems(items) {
 }
 
 export default class CheckoutProcess {
-  constructor(key, outputSelector, externalServices) {
+  constructor(key, outputSelector) {
     this.key = key;
     this.outputSelector = outputSelector;
-    this.externalServices = externalServices;
     this.list = [];
     this.itemCount = 0;
     this.itemTotal = 0;
@@ -29,42 +36,36 @@ export default class CheckoutProcess {
 
   init() {
     const storedCart = getLocalStorage(this.key);
-    this.list = Array.isArray(storedCart) ? storedCart : [];
+    this.list = Array.isArray(storedCart) ? storedCart : [storedCart];
     this.calculateItemSummary();
+  }
+
+  calculateOrdertotal() {
+    this.tax = (Number(this.itemTotal) * 0.06).toFixed(2);
+    this.shipping = this.list.length ? 10 + (this.list.length - 1) * 2 : 0;
+    this.orderTotal = (
+      Number(this.itemTotal) +
+      this.shipping +
+      Number(this.tax)
+    ).toFixed(2);
+    this.displayOrderTotals();
   }
 
   calculateItemSummary() {
     this.itemCount = this.list.reduce(
-      (total, item) => total + (Number(item.quantity) || 1),
-      0,
+      (sum, item) => sum + (Number(item.quantity) || 1),
     );
-    this.itemTotal = this.list.reduce(
-      (total, item) =>
-        total + Number(item.FinalPrice) * (Number(item.quantity) || 1),
+    const subtotal = this.list.reduce(
+      (sum, item) => sum + Number(item.FinalPrice || 0),
       0,
     );
 
-    const itemCount = document.querySelector(
-      `${this.outputSelector} #item-count`,
-    );
-    const subtotal = document.querySelector(
+    this.itemTotal = subtotal.toFixed(2);
+    document.querySelector(`${this.outputSelector} #item-count`).textContent =
+      this.list.length;
+    document.querySelector(
       `${this.outputSelector} #item-subtotal`,
-    );
-
-    if (itemCount) {
-      itemCount.textContent = `${this.itemCount} item${this.itemCount === 1 ? "" : "s"}`;
-    }
-    if (subtotal) {
-      subtotal.textContent = `$${this.itemTotal.toFixed(2)}`;
-    }
-  }
-
-  calculateOrderTotal() {
-    this.tax = this.itemTotal * 0.06;
-    this.shipping =
-      this.itemCount > 0 ? 10 + Math.max(this.itemCount - 1, 0) * 2 : 0;
-    this.orderTotal = this.itemTotal + this.tax + this.shipping;
-    this.displayOrderTotals();
+    ).textContent = `$${this.itemTotal}`;
   }
 
   displayOrderTotals() {
@@ -74,21 +75,31 @@ export default class CheckoutProcess {
       `${this.outputSelector} #order-total`,
     );
 
-    if (tax) tax.textContent = `$${this.tax.toFixed(2)}`;
-    if (shipping) shipping.textContent = `$${this.shipping.toFixed(2)}`;
-    if (orderTotal) orderTotal.textContent = `$${this.orderTotal.toFixed(2)}`;
+    if (tax) tax.textContent = `$${this.tax}`;
+    if (shipping) shipping.textContent = `$${this.shipping}`;
+    if (orderTotal) orderTotal.textContent = `$${this.orderTotal}`;
   }
 
-  async checkout(form) {
-    this.calculateOrderTotal();
-    const order = formDataToJSON(form);
+  async checkout() {
+    const form = document.forms.checkout;
+    const payload = formDataToJSON(form);
+    payload.orderDate = new Date().toISOString();
+    payload.orderTotal = this.orderTotal;
+    payload.tax = this.tax;
+    payload.shipping = this.shipping;
+    payload.items = packageItems(this.list);
 
-    order.orderDate = new Date().toISOString();
-    order.items = packageItems(this.list);
-    order.orderTotal = this.orderTotal.toFixed(2);
-    order.shipping = this.shipping;
-    order.tax = this.tax.toFixed(2);
-
-    return this.externalServices.checkout(order);
+    try {
+      await services.checkout(payload);
+      setLocalStorage(this.key, []);
+      window.location.assign("/checkout/success.html");
+    } catch (error) {
+      removeAllAlerts();
+      const messages =
+        error.message && typeof error.message === "object"
+          ? Object.values(error.message)
+          : [error.message || "unable to place your order."];
+      messages.forEach((message) => alertMessage(message));
+    }
   }
 }
