@@ -52,17 +52,19 @@ export default class CheckoutProcess {
   }
 
   calculateItemSummary() {
-    this.itemCount = this.list.reduce(
-      (sum, item) => sum + (Number(item.quantity) || 1),
-    );
     const subtotal = this.list.reduce(
-      (sum, item) => sum + Number(item.FinalPrice || 0),
+      (sum, item) =>
+        sum + Number(item.FinalPrice || 0) * Number(item.quantity || 1),
+      0,
+    );
+    this.itemTotal = subtotal.toFixed(2);
+    this.itemCount = this.list.reduce(
+      (acumulator, item) => acumulator + (Number(item.quantity) || 1),
       0,
     );
 
-    this.itemTotal = subtotal.toFixed(2);
     document.querySelector(`${this.outputSelector} #item-count`).textContent =
-      this.list.length;
+      this.itemCount;
     document.querySelector(
       `${this.outputSelector} #item-subtotal`,
     ).textContent = `$${this.itemTotal}`;
@@ -100,6 +102,7 @@ export default class CheckoutProcess {
           ? Object.values(error.message)
           : [error.message || "unable to place your order."];
       messages.forEach((message) => alertMessage(message));
+      throw error;
     }
   }
 }
