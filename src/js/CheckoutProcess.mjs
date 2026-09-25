@@ -59,7 +59,7 @@ export default class CheckoutProcess {
     );
     this.itemTotal = subtotal.toFixed(2);
     this.itemCount = this.list.reduce(
-      (acumulator, item) => acumulator + (Number(item.quantity) || 1),
+      (accumulator, item) => accumulator + (Number(item.quantity) || 1),
       0,
     );
 
