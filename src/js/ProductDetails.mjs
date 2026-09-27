@@ -1,18 +1,26 @@
-import { getLocalStorage, setLocalStorage, updateCartCount } from "./utils.mjs";
+import {
+  alertMessage,
+  getLocalStorage,
+  renderBreadcrumb,
+  setLocalStorage,
+  updateCartCount,
+} from "./utils.mjs";
 import {
   productOriginalPriceDetails,
   productDiscountSaveDetails,
 } from "./ProductCalculateDiscount.mjs";
 
 export default class ProductDetails {
-  constructor(productId, dataSource) {
+  constructor(productId, dataSource, category) {
     this.productId = productId;
     this.product = {};
     this.dataSource = dataSource;
+    this.category = category;
   }
 
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
+    renderBreadcrumb(this.category || this.product.Category || "products");
     this.renderProductDetails();
     document
       .getElementById("addToCart")
@@ -35,6 +43,7 @@ export default class ProductDetails {
 
     setLocalStorage("so-cart", cart);
     updateCartCount();
+    alertMessage(`${this.product.Name} was added to your cart.`);
   }
 
   renderProductDetails() {

@@ -26,7 +26,10 @@ export default class ExternalServices {
     const categoryName = category.toLowerCase();
     const response = await fetch(`${baseURL}products/search/${categoryName}`);
     const data = await convertToJson(response);
-    return data.Result || [];
+    return (data.Result || []).map((product) => ({
+      ...product,
+      Category: categoryName,
+    }));
   }
 
   async findProductById(id) {
