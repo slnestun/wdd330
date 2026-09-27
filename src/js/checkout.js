@@ -1,14 +1,9 @@
 import { loadHeaderFooter, updateCartCount } from "./utils.mjs";
 import CheckoutProcess from "./CheckoutProcess.mjs";
-import ExternalServices from "./ExternalServices.mjs";
 
 loadHeaderFooter(updateCartCount);
 
-const checkout = new CheckoutProcess(
-  "so-cart",
-  "#order-summary",
-  new ExternalServices(),
-);
+const checkout = new CheckoutProcess("so-cart", "#order-summary");
 
 const form = document.querySelector("#checkout-form");
 document
@@ -38,8 +33,8 @@ form?.addEventListener("submit", async (event) => {
       await checkout.checkout();
       message.textContent = "Order submitted successfully.";
     }
-  } catch (error) {
-    message.textContent = error.message;
+  } catch {
+    message.textContent = "";
     submitButton.disabled = false;
   }
 });

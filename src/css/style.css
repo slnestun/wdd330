@@ -114,6 +114,49 @@ button {
   border-bottom: 2px solid var(--primary-color);
 }
 
+.breadcrumb {
+  padding: 0.75rem 1rem;
+  background-color: #f5f5f5;
+  color: var(--dark-grey);
+  font-size: var(--small-font);
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--tertiary-color);
+  border-radius: 0.25rem;
+  background-color: #fff1e6;
+  color: var(--dark-grey);
+}
+
+.alert p {
+  padding: 0;
+}
+
+.alert .alert__close {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--tertiary-color);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.alert .alert__close:hover,
+.alert .alert__close:focus-visible {
+  background-color: var(--tertiary-color);
+  color: white;
+}
+
 /* End utility classes */
 
 /* Cart icon styles */

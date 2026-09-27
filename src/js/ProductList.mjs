@@ -1,10 +1,20 @@
-import { renderListWithTemplate, getParam } from "./utils.mjs";
+import {
+  formatCategoryName,
+  getParam,
+  renderBreadcrumb,
+  renderListWithTemplate,
+} from "./utils.mjs";
 import { productOriginalPriceDetails } from "./ProductCalculateDiscount.mjs";
 
-function productCardTemplate(product) {
+function productCardTemplate(product, category) {
+  const productCategory = product.Category || category;
+  const categoryParam = productCategory
+    ? `&category=${encodeURIComponent(productCategory)}`
+    : "";
+
   return `
     <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}">
+      <a href="/product_pages/?product=${product.Id}${categoryParam}">
         <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
         <h2>${product.Brand.Name}</h2>
         <h3>${product.NameWithoutBrand}</h3>
@@ -34,10 +44,7 @@ export default class ProductList {
       title.textContent = `Search results for: "${param}"`;
     } else {
       if (this.category) {
-        const categoryName = this.category
-          .split("-")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ");
+        const categoryName = formatCategoryName(this.category);
         title.textContent = `Top Products: ${categoryName}`;
       }
     }
@@ -50,6 +57,10 @@ export default class ProductList {
     }
 
     this.products = listToRender;
+    renderBreadcrumb(
+      param ? "search-results" : this.category || "products",
+      listToRender.length,
+    );
     this.listElement.innerHTML = "";
 
     if (listToRender.length === 0) {
@@ -78,7 +89,7 @@ export default class ProductList {
 
   renderList(list) {
     renderListWithTemplate(
-      productCardTemplate,
+      (product) => productCardTemplate(product, this.category),
       this.listElement,
       list,
       "afterbegin",

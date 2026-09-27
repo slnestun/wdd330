@@ -33,6 +33,25 @@ export function getParam(param) {
   return urlParams.get(param);
 }
 
+export function formatCategoryName(category) {
+  return category
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export function renderBreadcrumb(category, productCount) {
+  const breadcrumb = qs("#breadcrumb");
+  if (!breadcrumb || !category) return;
+
+  const categoryName = formatCategoryName(category);
+  breadcrumb.textContent =
+    productCount === undefined
+      ? categoryName
+      : `${categoryName} -> (${productCount} ${productCount === 1 ? "item" : "items"})`;
+  breadcrumb.hidden = false;
+}
+
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
@@ -45,19 +64,24 @@ export function setClick(selector, callback) {
 export function alertMessage(message, scroll = true) {
   const alert = document.createElement("div");
   alert.className = "alert";
+  alert.setAttribute("role", "alert");
 
   const text = document.createElement("p");
   text.textContent = message;
-  const close = document.createElement("button");
-  close.type = "button";
-  close.textContent = "X";
-  close.setAttribute("aria-label", "Dismiss message");
-  close.addEventListener("click", () => alert.remove());
-  alert.append(text, close);
 
-  const main = qs("main");
-  main.prepend(alert);
-  if (scroll) window.scrollTo(0, 0);
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "alert__close";
+  closeButton.setAttribute("aria-label", "Dismiss message");
+  closeButton.textContent = "×";
+  closeButton.addEventListener("click", () => alert.remove());
+
+  alert.append(text, closeButton);
+  qs("main").prepend(alert);
+
+  if (scroll) {
+    window.scrollTo(0, 0);
+  }
 }
 
 export function renderListWithTemplate(
@@ -120,7 +144,4 @@ export function updateCartCount() {
     cartCount.textContent = count;
     cartCount.style.display = count > 0 ? "flex" : "none";
   });
-}
-export function removeAllAlerts() {
-  document.querySelectorAll(".alert").forEach((alert) => alert.remove());
 }

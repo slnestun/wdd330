@@ -5,9 +5,10 @@ import ProductDetails from "./ProductDetails.mjs";
 loadHeaderFooter(updateCartCount);
 
 const productId = getParam("product");
+const category = getParam("category");
 const dataSource = new ExternalServices();
 
 if (productId) {
-  const product = new ProductDetails(productId, dataSource);
+  const product = new ProductDetails(productId, dataSource, category);
   product.init();
 }
