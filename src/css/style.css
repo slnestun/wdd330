@@ -90,7 +90,7 @@ p {
   margin-top: -1.3em;
 }
 
-.logo--square>div {
+.logo--square > div {
   margin-top: -1.7em;
 }
 
@@ -365,7 +365,7 @@ button {
   padding: 1rem;
 }
 
-.checkout-page>h1 {
+.checkout-page > h1 {
   margin: 1rem 0;
   text-align: center;
 }
@@ -436,7 +436,7 @@ button {
   margin-bottom: 0.75rem;
 }
 
-.order-summary>div {
+.order-summary > div {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
@@ -595,7 +595,7 @@ input[type="number"]::before {
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  padding: .5rem;
+  padding: 0.5rem;
   border: 1px solid var(--dark-grey);
   border-radius: 4px;
   background: transparent;
