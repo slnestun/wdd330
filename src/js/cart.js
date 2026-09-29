@@ -42,16 +42,25 @@ function removeCartItem(productId) {
   updateCartCount();
 }
 
+function updateCartItemQuantity(productId, change) {
+  const storedCart = getLocalStorage("so-cart");
+  const cartItems = Array.isArray(storedCart) ? storedCart : [];
+  const item = cartItems.find(
+    (cartItem) => String(cartItem.Id) === String(productId),
+  );
+
+  if (!item) return;
+
+  item.quantity = Math.max(1, (Number(item.quantity) || 1) + change);
+  setLocalStorage("so-cart", cartItems);
+  renderCartContents();
+}
+
 function cartItemTemplate(item) {
-  const subtotal = Number(item.FinalPrice) * (item.quantity || 1);
+  const quantity = Number(item.quantity) || 1;
+  const subtotal = Number(item.FinalPrice) * quantity;
 
   return `<li class="cart-card divider">
-    <button
-      type="button"
-      class="cart-card__remove"
-      data-id="${item.Id}"
-      aria-label="Remove ${item.Name} from cart"
-    >&times;</button>
     <a href="../product_pages/?product=${item.Id}" class="cart-card__image">
       <img
         src="${item.Images?.PrimarySmall || item.Images?.PrimaryMedium || item.Image}"
@@ -63,7 +72,31 @@ function cartItemTemplate(item) {
       <h2 class="card__name">${item.Name}</h2>
     </a>
     <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-    <p class="cart-card__quantity">qty: ${item.quantity}</p>
+    <div class="cart-card__quantity">
+      <span>qty:</span>
+      <button
+        type="button"
+        class="cart-card__quantity-button"
+        data-id="${item.Id}"
+        data-change="-1"
+        aria-label="Decrease quantity of ${item.Name}"
+        ${quantity <= 1 ? "disabled" : ""}
+      >-</button>
+      <span aria-live="polite">${quantity}</span>
+      <button
+        type="button"
+        class="cart-card__quantity-button"
+        data-id="${item.Id}"
+        data-change="1"
+        aria-label="Increase quantity of ${item.Name}"
+      >+</button>
+      <button
+        type="button"
+        class="cart-card__remove"
+        data-id="${item.Id}"
+        aria-label="Remove ${item.Name} from cart"
+      >&times;</button>
+    </div>
     <p class="cart-card__price">$${Number(item.FinalPrice).toFixed(2)}</p>
     <p class="cart-card__subtotal">subtotal:</p>
     <p class="subtotal_price">$${subtotal.toFixed(2)}</p>
@@ -75,8 +108,14 @@ loadHeaderFooter(updateCartCount);
 
 document.querySelector(".product-list")?.addEventListener("click", (event) => {
   const removeButton = event.target.closest(".cart-card__remove");
+  const quantityButton = event.target.closest(".cart-card__quantity-button");
 
   if (removeButton) {
     removeCartItem(removeButton.dataset.id);
+  } else if (quantityButton) {
+    updateCartItemQuantity(
+      quantityButton.dataset.id,
+      Number(quantityButton.dataset.change),
+    );
   }
 });
